@@ -3,55 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OK Timer</title>
+    <title>OK</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>OK Timer</h1>
-            <p class="tagline">Simple timers, done well</p>
+    <div class="app">
+        <header class="header">
+            <div class="logo">OK</div>
+            <button class="new-timer-btn" id="new-timer-btn">+</button>
         </header>
 
-        <main>
-            <section class="add-timer">
+        <div class="timer-form-overlay" id="timer-form-overlay">
+            <div class="timer-form-modal">
                 <form id="timer-form">
-                    <div class="form-group">
-                        <label for="title">What are you timing?</label>
-                        <input
-                            type="text"
-                            id="title"
-                            name="title"
-                            placeholder="e.g., Launch Day, Birthday, Meeting"
-                            required
-                        >
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        placeholder="name"
+                        autocomplete="off"
+                        required
+                    >
+                    <input
+                        type="datetime-local"
+                        id="date"
+                        name="date"
+                    >
+                    <div class="form-actions">
+                        <button type="submit">start</button>
+                        <button type="button" class="cancel-btn" id="cancel-btn">cancel</button>
                     </div>
-
-                    <div class="form-group">
-                        <label for="date">When? (optional, defaults to today)</label>
-                        <input
-                            type="datetime-local"
-                            id="date"
-                            name="date"
-                        >
-                    </div>
-
-                    <button type="submit" class="btn-primary">Add Timer</button>
                 </form>
-            </section>
+            </div>
+        </div>
 
-            <section class="timers-list">
-                <div id="timers-container">
-                    <div class="empty-state">
-                        <p>No timers yet. Add one above!</p>
-                    </div>
-                </div>
-            </section>
+        <main class="timers" id="timers-container">
+            <div class="empty-state">
+                <div class="empty-text">press + to begin</div>
+            </div>
         </main>
-
-        <footer>
-            <p>Built by OK Enterprises</p>
-        </footer>
     </div>
 
     <script src="app.js"></script>

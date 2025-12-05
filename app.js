@@ -104,19 +104,18 @@ function createTimerCard(timer) {
     const duration = calculateDuration(timer.date);
     const durationText = formatDuration(duration);
     const displayClass = duration.isPast ? 'countup' : 'countdown';
-    const prefix = duration.isPast ? '' : '';
     const suffix = duration.isPast ? ' ago' : '';
 
     card.innerHTML = `
         <div class="timer-header">
-            <h2 class="timer-title">${escapeHtml(timer.title)}</h2>
-            <button class="btn-delete" onclick="handleDeleteTimer('${timer.id}')">Delete</button>
+            <div class="timer-title">${escapeHtml(timer.title)}</div>
+            <button class="btn-delete" onclick="handleDeleteTimer('${timer.id}')">×</button>
         </div>
         <div class="timer-display ${displayClass}">
-            ${prefix}${durationText}${suffix}
+            ${durationText}${suffix}
         </div>
         <div class="timer-date">
-            ${duration.isPast ? 'Started' : 'Target'}: ${formatDate(timer.date)}
+            ${formatDate(timer.date)}
         </div>
     `;
 
@@ -129,7 +128,7 @@ function renderTimers() {
     if (timers.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <p>No timers yet. Add one above!</p>
+                <div class="empty-text">press + to begin</div>
             </div>
         `;
         return;
@@ -152,12 +151,11 @@ function updateTimerDisplay(timerId) {
     const duration = calculateDuration(timer.date);
     const durationText = formatDuration(duration);
     const displayClass = duration.isPast ? 'countup' : 'countdown';
-    const prefix = duration.isPast ? '' : '';
     const suffix = duration.isPast ? ' ago' : '';
 
     const displayElement = card.querySelector('.timer-display');
     displayElement.className = `timer-display ${displayClass}`;
-    displayElement.textContent = `${prefix}${durationText}${suffix}`;
+    displayElement.textContent = `${durationText}${suffix}`;
 }
 
 function startTimerUpdates() {
@@ -189,7 +187,6 @@ function handleFormSubmit(event) {
     const date = dateInput.value || null;
 
     if (!title.trim()) {
-        alert('Please enter a title for your timer');
         return;
     }
 
@@ -197,22 +194,34 @@ function handleFormSubmit(event) {
     renderTimers();
     startTimerUpdates();
 
-    // Reset form
+    // Reset form and close overlay
     form.reset();
-    titleInput.focus();
+    closeFormOverlay();
 }
 
 function handleDeleteTimer(id) {
-    if (confirm('Are you sure you want to delete this timer?')) {
-        deleteTimer(id);
-        renderTimers();
+    deleteTimer(id);
+    renderTimers();
 
-        // Stop updates if no timers left
-        if (timers.length === 0 && updateInterval) {
-            clearInterval(updateInterval);
-            updateInterval = null;
-        }
+    // Stop updates if no timers left
+    if (timers.length === 0 && updateInterval) {
+        clearInterval(updateInterval);
+        updateInterval = null;
     }
+}
+
+function openFormOverlay() {
+    const overlay = document.getElementById('timer-form-overlay');
+    overlay.classList.add('active');
+    // Focus title input after animation
+    setTimeout(() => {
+        document.getElementById('title').focus();
+    }, 100);
+}
+
+function closeFormOverlay() {
+    const overlay = document.getElementById('timer-form-overlay');
+    overlay.classList.remove('active');
 }
 
 // ========================================
@@ -241,12 +250,29 @@ function init() {
         startTimerUpdates();
     }
 
-    // Setup form handler
+    // Setup event handlers
     const form = document.getElementById('timer-form');
-    form.addEventListener('submit', handleFormSubmit);
+    const newTimerBtn = document.getElementById('new-timer-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const overlay = document.getElementById('timer-form-overlay');
 
-    // Focus title input
-    document.getElementById('title').focus();
+    form.addEventListener('submit', handleFormSubmit);
+    newTimerBtn.addEventListener('click', openFormOverlay);
+    cancelBtn.addEventListener('click', closeFormOverlay);
+
+    // Close overlay on background click
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeFormOverlay();
+        }
+    });
+
+    // Close overlay on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            closeFormOverlay();
+        }
+    });
 }
 
 // Start the app when DOM is ready
