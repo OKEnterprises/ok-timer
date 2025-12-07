@@ -52,6 +52,13 @@ body {
     font-size: 18px;
     font-weight: 500;
     letter-spacing: -0.02em;
+    color: var(--fg);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+}
+
+.logo:hover {
+    opacity: 0.6;
 }
 
 .new-timer-btn {
@@ -213,7 +220,7 @@ body {
 .timer-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: flex-start;
     margin-bottom: 16px;
     gap: 16px;
 }
@@ -225,9 +232,17 @@ body {
     flex: 1;
 }
 
-.btn-delete {
+.timer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+}
+
+.btn-delete,
+.btn-reset {
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 18px;
     font-weight: 300;
     color: var(--muted);
     background: none;
@@ -235,9 +250,20 @@ body {
     cursor: pointer;
     transition: color 0.15s ease;
     padding: 0;
+    line-height: 1;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.btn-delete:hover {
+.btn-reset {
+    font-size: 14px;
+}
+
+.btn-delete:hover,
+.btn-reset:hover {
     color: var(--fg);
 }
 

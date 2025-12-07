@@ -44,6 +44,22 @@ function deleteTimer(id) {
     saveTimers(timers);
 }
 
+function resetTimer(id) {
+    const timer = timers.find(t => t.id === id);
+    if (timer) {
+        timer.date = new Date().toISOString();
+        saveTimers(timers);
+        updateTimerDisplay(id);
+
+        // Also update the date display
+        const card = document.querySelector(`[data-timer-id="${id}"]`);
+        if (card) {
+            const dateElement = card.querySelector('.timer-date');
+            dateElement.textContent = formatDate(timer.date);
+        }
+    }
+}
+
 // ========================================
 // Timer Calculations
 // ========================================
@@ -109,7 +125,10 @@ function createTimerCard(timer) {
     card.innerHTML = `
         <div class="timer-header">
             <div class="timer-title">${escapeHtml(timer.title)}</div>
-            <button class="btn-delete" onclick="handleDeleteTimer('${timer.id}')">×</button>
+            <div class="timer-actions">
+                <button class="btn-delete" onclick="handleDeleteTimer('${timer.id}')">×</button>
+                <button class="btn-reset" onclick="handleResetTimer('${timer.id}')" title="Reset to current time">↻</button>
+            </div>
         </div>
         <div class="timer-display ${displayClass}">
             ${durationText}${suffix}
@@ -208,6 +227,10 @@ function handleDeleteTimer(id) {
         clearInterval(updateInterval);
         updateInterval = null;
     }
+}
+
+function handleResetTimer(id) {
+    resetTimer(id);
 }
 
 function openFormOverlay() {
