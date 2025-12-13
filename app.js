@@ -290,10 +290,22 @@ function init() {
         }
     });
 
-    // Close overlay on Escape key
+    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
+        // Close overlay on Escape key
         if (e.key === 'Escape' && overlay.classList.contains('active')) {
             closeFormOverlay();
+            return;
+        }
+
+        // Open overlay on + or n key (but not when typing in an input)
+        if ((e.key === '+' || e.key === 'n') && !overlay.classList.contains('active')) {
+            // Don't trigger if user is typing in an input or textarea
+            const activeElement = document.activeElement;
+            if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+                return;
+            }
+            openFormOverlay();
         }
     });
 }
