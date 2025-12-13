@@ -88,6 +88,18 @@ body {
     transform: scale(0.96);
 }
 
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-8deg); }
+    75% { transform: rotate(8deg); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .new-timer-btn {
+        animation: wiggle 0.5s ease-in-out 0.3s;
+    }
+}
+
 /* Form Overlay */
 .timer-form-overlay {
     position: fixed;
